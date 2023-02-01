@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <style>
+    #search-bar {
+      display: flex;
+      justify-content: center;
+      margin: 20px 10px;
+    }
+
+    #text {
+      width: 40%;
+      padding: 10px;
+      margin-right: 10px;   
+      border-radius: 10px;
+      border: 1px solid grey;
+    }
+
+    #number {
+      width: 10%;
+      padding: 10px;
+      margin-right: 10px;   
+      border-radius: 10px;
+      border: 1px solid grey;
+    }
+
+    /* #search-bar input {
+      width: 40%;
+      padding: 10px;
+    } */
+
+    #search-bar button {
+      margin-left: 0px;
+      border-radius: 10px;
+      border: 1px solid grey;
+    }
+
+    .bulk-results {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .search {
+      margin: 5px auto;
+      padding: 20px;
+      background: white;
+    }
+
+    .search-header {
+      height: 40px;
+    }
+
+    .search-term {
+      font-weight: bold;
+      color: #000;
+      text-decoration: none;
+    }
+
+    .search-results {
+      display: block;
+      width: 1400px;
+      margin: 0 auto;
+      /* grid-template-columns: repeat(3, 100px);
+      grid-auto-rows: 150px;
+      grid-gap: 20px; */
+    }
+
+    .product {
+      display: block;
+      color: #333;
+      background: #fafafa;
+      padding: 20px;
+      text-decoration: none;
+      margin-top: 20px;
+    }
+
+    .product-image {
+      max-width: 100px;
+      max-height: 100px;
+      margin-bottom: 10px;
+    }
+
+    .product-info {
+      display: flex;
+      height: 54px;
+      overflow: hidden;
+    }
+
+    .product-name {
+      font-size: 10px;
+      margin-right: 10px;
+    }
+  </style>
+
+
+  <form id="search-bar" action="/search">
+    <input id="text" type="text" placeholder="Search.." name="search" value="{{ search_term }}">
+    <input id="number" type="number" placeholder="Number of results" name="nor" value="{{number_of_results}}">
+    <button type="submit"><i class="fa fa-search">Search</i></button>
+  </form>
+
+  <div class="bulk-results">
+    {% for category, products in products_by_category %}
+      <div class="search">
+        <div class="search-header">
+          <a href="search?search={{category}}" class="search-term">Search for "{{ category }}" with {{number_of_results}} results</a>
+        </div>
+        <div class="search-results">
+          {% for product in products %}
+            <a href="/product/{{ product.id }}" class="product">
+              <!-- <img class="product-image" src="{{ product.image }}"/> -->
+              <div class="product-info">
+                <span>{{product.name}}</span>
+              </div>
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}
