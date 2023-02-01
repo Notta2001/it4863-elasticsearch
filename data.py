@@ -10,15 +10,17 @@ class ProductData():
     just as easily load them from a database, or anywhere else.
     """
 
-    def __init__(self, id, content):
+    def __init__(self, id, content, category):
         self.id = id
         self.content = content
+        self.category = category
 
     def __str__(self):
         return textwrap.dedent("""\
             Id: {}
             Content: {}
-        """).format(self.id, self.content)
+            Category: {}
+        """).format(self.id, self.content, self.category)
 
 
 def all_products():
@@ -37,7 +39,7 @@ def all_products():
         products_path = os.path.join(dir_path, 'book.json')
         with open(products_path) as product_file:
             for product in json.load(product_file):
-                product_data = ProductData(product['id'], product['name'])
+                product_data = ProductData(product['id'], product['name'], product['category'])
                 _all_products.append(product_data)
 
     return _all_products

@@ -24,6 +24,15 @@
       border: 1px solid grey;
     }
 
+    #category {
+      width: 10%;
+      padding: 10px;
+      margin-right: 10px;   
+      border-radius: 10px;
+      border: 1px solid grey;
+      background-color: white;
+    }
+
     /* #search-bar input {
       width: 40%;
       padding: 10px;
@@ -38,7 +47,9 @@
     .bulk-results {
       display: flex;
       flex-wrap: wrap;
-      margin-bottom: 20px;
+      margin-bottom: 50px;
+      float: left;
+      margin-left: 100px;
     }
 
     .search {
@@ -59,7 +70,7 @@
 
     .search-results {
       display: block;
-      width: 1400px;
+      width: 600px;
       margin: 0 auto;
       /* grid-template-columns: repeat(3, 100px);
       grid-auto-rows: 150px;
@@ -83,7 +94,7 @@
 
     .product-info {
       display: flex;
-      height: 80px;
+      height: 74px;
       overflow: hidden;
     }
 
@@ -116,13 +127,13 @@
     </select>
     <button type="submit"><i class="fa fa-search">Search</i></button>
   </form>
-
+  <div class="all-result"">
   {% for result in products_by_category %}
   <div class="bulk-results">
     {% for category, products in result %}
       <div class="search">
         <div class="search-header">
-          <a href="search?search={{category}}" class="search-term">Search for "{{ category }}" with {{number_of_results}} results</a>
+          <a href="search?search={{category}}" class="search-term">"{{ category }}"</a>
         </div>
         <div class="search-results">
           {% for i, product in products %}
@@ -133,8 +144,6 @@
                   <h3>{{i}}</h3>
                 </div>
                 <div>
-                  <span><span style="font-weight: bold;">Category: </span> {{product.category}}</span>
-                  <div style="height: 5px"></div>
                   <span><span style="font-weight: bold;">Content: </span>{{product.name}}</span>
                 </div>
               </div>
@@ -144,5 +153,6 @@
       </div>
     {% endfor %}
   </div>
+</div>
   {% endfor %}
 {% endblock %}

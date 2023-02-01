@@ -30,12 +30,13 @@ def index_product(es, products: ProductData):
             "_id": product.id,
             "_source": {
                 "name": product.content,
+                "category": product.category,
             }
         })
     bulk(es, bulk_data)
     # Don't delete this! You'll need it to see if your indexing job is working,
     # or if it has stalled.
-    print("Indexed {}".format("A Great Product"))
+    print("Indexed Done")
 
 
 if __name__ == '__main__':
