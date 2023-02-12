@@ -1,5 +1,5 @@
 import News from "./components/News";
-import { TextField, InputAdornment, IconButton, Box, Button, Typography, Pagination, Paper, Dialog, Checkbox  } from "@mui/material";
+import { TextField, InputAdornment, IconButton, Box, Button, Typography, Pagination, Paper, Dialog, Checkbox, Link  } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { useState, useEffect } from "react"
@@ -118,44 +118,84 @@ function App() {
       .then(res => res.json())
       .then(data => {
         let curData = []
+        console.log(data)
         for(let i = 0; i < data.length; ++i) {
           curData.push({
+            "id": data[i]["id"],
             "title": data[i]['title'],
             "description": data[i]['description'],
             "image_url": data[i]['image_url']
           })
         }
+        console.log(curData)
         setRandomNews(curData)
       })
   }, [])
 
   const handleChangeValue = (e) => {
     setValue(e.target.value)
-    console.log(value)
   }
 
   const handleChangeSearch = (field, setValue, initialValue, e) => {
     if(field === "any" || field === "must_not" || field === "fuzzy") {
       let newValue = initialValue
       newValue[field] = e.target.value.split(",")
-      console.log(newValue)
+      for(let i = 0; i < newValue[field].length; ++i) {
+        newValue[field][i] = newValue[field][i].toLowerCase()
+      }
       setValue(newValue)
     }
     else {
       let newValue = initialValue
-      newValue[field] = e.target.value
-      console.log(newValue)
+      newValue[field] = e.target.value.toLowerCase()
       setValue(newValue)
     }
   }
 
+  const handleSearchNormal = async () => {
+    setRes([])
+    setSearch(value)
+    try {
+      fetch(`http://127.0.0.1:5000/normal`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        },
+      body: JSON.stringify({value}),
+    })
+      .then(res => res.json())
+      .then(data => {
+        let curRes2 = []
+        setNumRes(data['hits']['hits'].length)
+        for(let i = 0; i < data['hits']['hits'].length; ++i) {
+          curRes2.push({
+            'id': data['hits']['hits'][i]['_source']['id'],
+            'title': data['hits']['hits'][i]['_source']['title'],
+            'description': data['hits']['hits'][i]['_source']['description'],
+            'content': data['hits']['hits'][i]['_source']['content'],
+            'image_url': data['hits']['hits'][i]['_source']['image_url'],
+            'highlight': data['hits']['hits'][i]['highlight'],
+            // 'id': data['hits']['hits'][i]['_source']['id'],
+          })
+        }
+        console.log(curRes2)
+        setRes(curRes2)
+      })
+    } catch {
+      setNumRes(0)
+      setRes([])
+    }
+    
+  }
+
   const handleAdvancedSearch = async () => {
+    setRes([])
     fetch(`http://127.0.0.1:5000/search`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         },
-      body: JSON.stringify({titleSearch, contentSearch, desSearch}),
+      body: JSON.stringify({titleSearch, contentSearch, desSearch, synonyms}),
     })
       .then(res => res.json())
       .then(data => {
@@ -163,6 +203,7 @@ function App() {
         setNumRes(data['hits']['hits'].length)
         for(let i = 0; i < data['hits']['hits'].length; ++i) {
           curRes.push({
+            'id': data['hits']['hits'][i]['_source']['id'],
             'title': data['hits']['hits'][i]['_source']['title'],
             'description': data['hits']['hits'][i]['_source']['description'],
             'content': data['hits']['hits'][i]['_source']['content'],
@@ -170,6 +211,7 @@ function App() {
             'highlight': data['hits']['hits'][i]['highlight']
           })
         }
+        console.log(curRes)
         setRes(curRes)
         setTitleSearch({
           "match": null,
@@ -208,17 +250,16 @@ function App() {
         setTitle(false)
         setContent(false)
         setDes(false)
+        setSynonyms(false)
+        setSearch("")
+        setValue("")
       })
     
   }
 
-  const handleSearch = () => {
-    setSearch(value)
-  }
-
   const handleKeyDown = (e) => {
     if(e.keyCode == 13){
-      handleSearch()
+      handleSearchNormal()
     }
   }
 
@@ -245,7 +286,7 @@ function App() {
           endAdornment: (
             <InputAdornment>
               <IconButton>
-                <SearchIcon onClick={handleSearch} />
+                <SearchIcon onClick={handleSearchNormal} />
               </IconButton>
             </InputAdornment>
           )
@@ -318,11 +359,11 @@ function App() {
       </Box>
       {numRes !== null ? <Typography variant="body2" sx={{marginLeft: "250px", marginTop: "20px", fontSize:"16px", color: "#3399FF"}}>Có {numRes} kết quả ứng với tìm kiếm {search !== "" ? <Typography sx={{fontWeight: "bold", display: "inline-block"}}>"{search}"</Typography>: " "}</Typography> : ""}
       {numRes == null ? randomNews.map((news, index) => (
-        <News key={index} data={news}/>
+        <Link href={"/" + news.id} sx={{textDecoration: "none"}}><News key={index} data={news}/></Link>
       )) : ""}
       {numRes !== null ?<Box>
           {res.slice(page * 5, page * 5 + 5).map((news, index) => (
-            <News key={index} data={news}/>
+            <Link href={"/" + news.id} sx={{textDecoration: "none"}}><News key={index} data={news}/></Link>
           ))}
           <Paper sx={{display: "flex", justifyContent: "center", backgroundColor: "#3399FF", width: "200px", margin: "0 auto", marginBottom: "30px"}}>
           <Pagination sx={{display: "block", margin: "0 auto"}}

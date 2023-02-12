@@ -3,7 +3,7 @@ import {Box, Card, CardContent, Typography, CardMedia, List} from "@mui/material
 import { useState, useEffect } from 'react'
 
 const News = ({data}) => {
-  console.log(data.highlight)
+  console.log(data.id)
   const [newsTitle, setNewsTitle] = useState(data.title)
   const [newsDescription, setNewsDescription] = useState([data.description])
   useEffect(() => {
