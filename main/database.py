@@ -1,5 +1,6 @@
 import pymongo
 import random
+from bson.objectid import ObjectId
 
 class MongoDB():
     def __init__(self):
@@ -8,7 +9,7 @@ class MongoDB():
         self.collection = self.db["tktt_data"]
       
     def get_all_docs(self):
-        docs = self.collection.find().limit(10)
+        docs = self.collection.find()
 
         return docs
 
@@ -29,3 +30,8 @@ class MongoDB():
 
         return random_docs
     
+    def get_doc_by_id(self, id):
+        docs = self.collection.find({"_id": ObjectId(id)})
+
+        return docs
+
