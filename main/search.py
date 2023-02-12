@@ -9,7 +9,7 @@ HEADERS = {'content-type': 'application/json'}
 
 class SearchResult():
     """Represents a product returned from elasticsearch."""
-    def __init__(self, id_, name, category):
+    def __init__(self, id_, title, description, ):
         self.id = id_
         self.name = name
         self.category = category
@@ -73,6 +73,5 @@ def searchByCategoryAndTerm(term: str, category: str, count: int) -> List[Search
         ]
     }}
     docs = s.query(name_query)[:count].execute()
-    print(docs)
 
     return [SearchResult.from_doc(d) for d in docs]
