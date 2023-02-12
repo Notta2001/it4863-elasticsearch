@@ -1,5 +1,5 @@
 # it4863-elasticsearch
-Hello, it4863-elasticsearch ís an app that I build for my uni subject. 
+Hello, it4863-elasticsearch is an app that I build for my uni subject. 
 
 In this project, I use Elasticsearch [version 7.17.1] with Python, Javascript.
 
