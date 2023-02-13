@@ -4,6 +4,17 @@ import { useParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import News from './News'
 
+const getCurrentTimeFromStamp = (timestamp) => {
+  var d = new Date(timestamp * 1000);
+  var date = d.getDate() < 10 ? "0" + d.getDate() : d.getDate()
+  var month = (d.getMonth()) + 1 < 10 ? "0" + (d.getMonth() + 1): (d.getMonth() + 1)
+  var hour = d.getHours() < 10 ? "0" + d.getHours(): d.getHours() 
+  var minute = d.getMinutes() < 10 ? "0" + d.getMinutes(): d.getMinutes()
+  var timeStampCon = date + '/' + month + '/' + d.getFullYear() + " " + hour + ':' + minute;
+
+  return timeStampCon;
+};
+
 const Detail = () => {
   let {id} = useParams();
   const [page, setPage] = useState(0);
@@ -12,6 +23,7 @@ const Detail = () => {
   const [content, setContent] = useState("")
   const [imageUrl, setImageUrl] = useState("")
   const [newsData, setNewsData] = useState ([])
+  const [timestamp, setTimestamp] = useState("")
 
   useEffect(() => {
     fetch(`http://127.0.0.1:5000/${id}`)
@@ -74,11 +86,13 @@ const Detail = () => {
             setContent(data[0].content)
           }
           setImageUrl(data[0].image_url)
+          setTimestamp(data[0].timestamp)
         } else {
           setTitle(data[0]['title'])
           setDescription(data[0]['description'])
           setContent(data[0]["content"])
           setImageUrl(data[0]["image_url"])
+          setTimestamp(data[0].timestamp)
         }
       })
     
@@ -91,6 +105,7 @@ const Detail = () => {
           <Typography sx={{fontSize: "25px", margin: "20px 0", fontWeight: "bold", textAlign: "justify"}}>
             <div dangerouslySetInnerHTML={{ __html: title }} />
           </Typography>
+          <Typography textAlign="right" sx={{fontSize: "14px", marginRight: "10px", color: "grey", marginTop: "20px"}}>{getCurrentTimeFromStamp(timestamp)}</Typography>
           <CardMedia
             component="img"
             sx={{width: "400px", margin: "20px auto"}}

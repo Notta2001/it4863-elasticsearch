@@ -48,7 +48,7 @@ def getMultiMatch():
   else:
       des_query = None
 
-  query = build_query(title_query=title_query, content_query=content_query, des_query=des_query, minimum_should_match=minimum_should_match)
+  query = build_query(title_query=title_query, content_query=content_query, des_query=des_query, gte=data['GTE'], lte=data['LTE'], sort=data['range'], minimum_should_match=minimum_should_match)
   print(query)
   if (data['synonyms']):
     result = es.search(index=INDEX_SYN_NAME, body=query, size=10000)
@@ -65,7 +65,8 @@ def getMultiMatch():
           'description': doc['_source']['description'],
           'content': doc['_source']['content'],
           'image_url': doc['_source']['image_url'],
-          'highlight': doc['highlight']})
+          'highlight': doc['highlight'],
+          'timestamp': doc['_source']['timestamp']}),
   global_result = cur_result
   return result
 
@@ -80,7 +81,8 @@ def getRandom():
         "description": doc["description"],
         "content": doc["contents"],
         "image_url": doc["image_url"],
-        "url": doc["url"]
+        "url": doc["url"],
+        "timestamp": doc["timestamp"]
      })
   return json.dumps(result)
 
@@ -101,7 +103,8 @@ def getNormal():
           'description': doc['_source']['description'],
           'content': doc['_source']['content'],
           'image_url': doc['_source']['image_url'],
-          'highlight': doc['highlight']})
+          'highlight': doc['highlight'],
+          'timestamp': doc['_source']['timestamp']})
   global_result = cur_result
   return result
 
@@ -129,6 +132,7 @@ def getSingle(_id):
           "content": doc["contents"],
           "image_url": doc["image_url"],
           "url": doc["url"],
+          "timestamp": doc["timestamp"]
       })
     return json.dumps(res)
   return result

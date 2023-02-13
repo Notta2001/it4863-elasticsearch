@@ -5,8 +5,8 @@ from bson.objectid import ObjectId
 class MongoDB():
     def __init__(self):
         self.client = pymongo.MongoClient("mongodb+srv://gnuhcouq:thaolinh@gnuhcouq.mtstm.mongodb.net/?retryWrites=true&w=majority")
-        self.db = self.client["hung"]
-        self.collection = self.db["tktt_data"]
+        self.db = self.client["tktt"]
+        self.collection = self.db["news_data"]
       
     def get_all_docs(self):
         docs = self.collection.find()
@@ -34,4 +34,3 @@ class MongoDB():
         docs = self.collection.find({"_id": ObjectId(id)})
 
         return docs
-

@@ -8,9 +8,10 @@ HEADERS = {'content-type': 'application/json'}
 # def build_query(query_type, fields, query=None, should_query=None, must_query=None, must_not_query=None, synonyms=None, boost=None, fuzziness=None, minimum_should_match=1,
 #                 use_bool=False, use_wildcard=False, use_regexp=False, match_phrase=False, function_score=False,
 #                 more_like_this=False, analyzer="my_analyzer"):
-def build_query(normal=None, title_query=None, content_query=None, des_query=None, minimum_should_match=0, analyzer="my_analyzer"):
+def build_query(normal=None, title_query=None, content_query=None, des_query=None, gte="0", lte="1676313026", sort=False, minimum_should_match=0, analyzer="my_analyzer"):
     s = Search()
-    client = Elasticsearch(["http://localhost:9200"])
+    if sort:
+        s = Search().sort({'timestamp': "desc"})
     should_query = []
     must_query = []
     must_not_query = []
@@ -53,7 +54,6 @@ def build_query(normal=None, title_query=None, content_query=None, des_query=Non
         # if content_query['more_like_this']:
         #     must_query.append({"more_like_this": {'fields': ["content"], "like": content_query['more_like_this'][0], "min_term_freq": content_query['more_like_this'][1], "max_query_terms": content_query['more_like_this'][2]}})
             
-
     if des_query:
         if des_query['match']:
             should_query.append({"match": {'description': {"query": des_query['match'], "boost": des_query['boosting']}}})
@@ -69,6 +69,9 @@ def build_query(normal=None, title_query=None, content_query=None, des_query=Non
                 must_not_query.append({"match": {'description': {"query": value, "analyzer": analyzer}}})
         if des_query['wildcard']:
             must_query.append({"wildcard": {'description': des_query['wildcard']}})
+    
+    if sort:
+        must_query.append({"range": {"timestamp": {"gte": gte, "lte": lte}}})
 
     s = s.query("bool", should=should_query, must=must_query, must_not=must_not_query, minimum_should_match=minimum_should_match)
 
@@ -97,9 +100,7 @@ def build_query(normal=None, title_query=None, content_query=None, des_query=Non
 
 # # # Boost
 # # query = build_query(content_query={"match": None, "boosting": 1, "any": ["nhân", "lan"], "term": "theo", "fuzzy": ["chuyn", 1], "must_not": ["Chinh"], "wildcard": "tr?*", "more_like_this": ["Phạm Minh Chính Chính Phạm Minh Phạm Minh Phạm Minh", 1, 1]})
-# query = build_query(content_query={"match": "Thủ tướng", "boosting": 1, "any": None, "term": None, "fuzzy": None, "must_not": None, "wildcard": None, "more_like_this": None})
-# print(query)
-# result = es.search(index=INDEX_NAME, body=query)
-# print(result)
+# query = build_query(range_query={"gte": 1676136204, "lte": 1676136204 + 10000})
 
+# result = es.search(index=INDEX_NAME, body=query)
 # print(result)

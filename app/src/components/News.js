@@ -2,7 +2,19 @@ import React from 'react'
 import {Box, Card, CardContent, Typography, CardMedia, List} from "@mui/material"
 import { useState, useEffect } from 'react'
 
+const getCurrentTimeFromStamp = (timestamp) => {
+  var d = new Date(timestamp * 1000);
+  var date = d.getDate() < 10 ? "0" + d.getDate() : d.getDate()
+  var month = (d.getMonth()) + 1 < 10 ? "0" + (d.getMonth() + 1): (d.getMonth() + 1)
+  var hour = d.getHours() < 10 ? "0" + d.getHours(): d.getHours() 
+  var minute = d.getMinutes() < 10 ? "0" + d.getMinutes(): d.getMinutes()
+  var timeStampCon = date + '/' + month + '/' + d.getFullYear() + " " + hour + ':' + minute;
+
+  return timeStampCon;
+};
+
 const News = ({data}) => {
+  console.log(data)
   const [newsTitle, setNewsTitle] = useState(data.title)
   const [newsDescription, setNewsDescription] = useState([data.description])
   useEffect(() => {
@@ -30,6 +42,10 @@ const News = ({data}) => {
         setNewsDescription([data.description])
       }
     }
+    else {
+      setNewsTitle(data.title)
+      setNewsDescription([data.description])
+    }
   }, [data])
 
 
@@ -51,8 +67,9 @@ const News = ({data}) => {
             <Typography variant="subtitle1" color="text.secondary" sx={{fontSize: "14px"}} component="div">
             <div dangerouslySetInnerHTML={{ __html: des }} />
           </Typography>
-          ))}</Box>
-          
+          ))}
+          <Typography textAlign="right" sx={{fontSize: "14px", marginRight: "10px", color: "grey", marginTop: "20px"}}>{getCurrentTimeFromStamp(data.timestamp)}</Typography>
+          </Box>
         </CardContent>
         <Box sx={{ display: 'flex', alignItems: 'center', pl: 1, pb: 1 }}>
 

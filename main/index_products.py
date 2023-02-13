@@ -8,7 +8,7 @@ def main():
     es = Elasticsearch()
     es.indices.delete(index=INDEX_NAME, ignore=404)
     es.indices.delete(index=INDEX_SYN_NAME, ignore=404)
-    es.indices.create(
+    response = es.indices.create(
         index= "news_index",
         body={
             "settings": {
@@ -39,6 +39,9 @@ def main():
                         "description" : {
                             "type" : "text",
                             "analyzer": "my_analyzer"
+                        },
+                        "timestamp": {
+                            "type": "integer"
                         }
                     }            
                 }
@@ -109,6 +112,9 @@ def main():
                         "description" : {
                             "type" : "text",
                             "analyzer": "my_analyzer"
+                        },
+                        "timestamp": {
+                            "type": "integer"
                         }
                     }            
                 }
@@ -130,17 +136,18 @@ def index_news(es, news: NewsData):
     """Add a single product to the ProductData index."""
 
     for i, data in enumerate(news):
-        print(data.title)
+        print(data.timestamp)
         index_data = {
             "id": data.id,
             "title": data.title,
             "content": data.content,
             "description": data.description,
             "url": data.url,
-            "image_url": data.image_url
+            "image_url": data.image_url,
+            "timestamp": data.timestamp
         }
-        es.index(index=INDEX_NAME, doc_type="_doc", id=i, body=index_data)
-        es.index(index=INDEX_SYN_NAME, doc_type="_doc", id=i, body=index_data)
+        es.index(index=INDEX_NAME, doc_type="_doc", id=data.id, body=index_data)
+        es.index(index=INDEX_SYN_NAME, doc_type="_doc", id=data.id, body=index_data)
 
     # Don't delete this! You'll need it to see if your indexing job is working,
     # or if it has stalled.

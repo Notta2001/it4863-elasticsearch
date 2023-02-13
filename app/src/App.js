@@ -1,7 +1,11 @@
 import News from "./components/News";
 import { TextField, InputAdornment, IconButton, Box, Button, Typography, Pagination, Paper, Dialog, Checkbox, Link  } from "@mui/material";
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import dayjs from 'dayjs';
 import SearchIcon from '@mui/icons-material/Search';
 import SettingsIcon from '@mui/icons-material/Settings';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { useState, useEffect } from "react"
 
 function App() {
@@ -16,6 +20,9 @@ function App() {
   const [title, setTitle] = useState(false)
   const [des, setDes] = useState(false)
   const [content, setContent] = useState(false)
+  const [range, setRange] = useState(false)
+  const [lte, setLte] = useState(dayjs('2024-08-18T21:11:54'))
+  const [gte, setGte] = useState(dayjs('1970-08-18T21:11:54'))
   const [titleSearch, setTitleSearch] = useState({
     "match": null,
     "any": [],
@@ -112,6 +119,10 @@ function App() {
     setDes(e.target.checked)
   }
 
+  const handleChangeRange = (e) => {
+    setRange(e.target.checked)
+  }
+
 
   useEffect(() => {
     fetch(`http://127.0.0.1:5000/random`)
@@ -124,7 +135,8 @@ function App() {
             "id": data[i]["id"],
             "title": data[i]['title'],
             "description": data[i]['description'],
-            "image_url": data[i]['image_url']
+            "image_url": data[i]['image_url'],
+            "timestamp": data[i]['timestamp']
           })
         }
         console.log(curData)
@@ -169,6 +181,7 @@ function App() {
     })
       .then(res => res.json())
       .then(data => {
+        console.log(data['hits']['hits'][0])
         let curRes2 = []
         setNumRes(data['hits']['hits'].length)
         for(let i = 0; i < data['hits']['hits'].length; ++i) {
@@ -179,7 +192,7 @@ function App() {
             'content': data['hits']['hits'][i]['_source']['content'],
             'image_url': data['hits']['hits'][i]['_source']['image_url'],
             'highlight': data['hits']['hits'][i]['highlight'],
-            // 'id': data['hits']['hits'][i]['_source']['id'],
+            'timestamp': data['hits']['hits'][i]['_source']['timestamp']
           })
         }
         setRes(curRes2)
@@ -187,19 +200,20 @@ function App() {
       })
     } catch {
       setNumRes(0)
-      setRes([])
     }
     
   }
 
   const handleAdvancedSearch = async () => {
     setRes([])
+    let GTE = gte.unix() 
+    let LTE = lte.unix() 
     fetch(`http://127.0.0.1:5000/search`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         },
-      body: JSON.stringify({titleSearch, contentSearch, desSearch, synonyms}),
+      body: JSON.stringify({titleSearch, contentSearch, desSearch, synonyms, GTE, LTE, range}),
     })
       .then(res => res.json())
       .then(data => {
@@ -212,7 +226,8 @@ function App() {
             'description': data['hits']['hits'][i]['_source']['description'],
             'content': data['hits']['hits'][i]['_source']['content'],
             'image_url': data['hits']['hits'][i]['_source']['image_url'],
-            'highlight': data['hits']['hits'][i]['highlight']
+            'highlight': data['hits']['hits'][i]['highlight'],
+            'timestamp': data['hits']['hits'][i]['_source']['timestamp']
           })
         }
         console.log(curRes)
@@ -258,6 +273,9 @@ function App() {
         setSearch("")
         setValue("")
         setPage(0)
+        setLte(dayjs('2024-08-18T21:11:54'))
+        setGte(dayjs('1970-08-18T21:11:54'))
+        setRange(false)
       })
     
   }
@@ -267,6 +285,15 @@ function App() {
       handleSearchNormal()
     }
   }
+
+  const handleChangeTimeGTE = (newValue) => {
+    setGte(newValue)
+  };
+
+  const handleChangeTimeLTE = (newValue) => {
+    setLte(newValue)
+  };
+
 
   return (
     <div className="App">
@@ -352,9 +379,29 @@ function App() {
                   <Typography variant="subtitle2" sx={{marginLeft: "15px", width: "300px", fontSize: "11px"}}>? đại diện cho một kí tự bất kì, * đại diện cho không hoặc nhiều kí tự <Typography sx={{fontWeight: "bold", fontSize: "11px", display: "inline-block"}}>(VD:"t?ô*")</Typography></Typography>
                 </Box> */}
               </Box> : ""}
-              
             </Box>
-          ))}
+          ))}<Box sx={{display: "flex", alignItems: "center"}}>
+                <Checkbox checked={range} onChange={(e) => handleChangeRange(e)}/>
+                <Typography>Tìm kiếm khoảng thời gian</Typography>
+              </Box>  
+                { range ? <Box> 
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <Box sx={{display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "10px"}}>
+                    <Typography variant="body2" sx={{width: "150px"}}>Ngày bắt đầu</Typography>
+                    <DateTimePicker
+                      value={gte}
+                      onChange={handleChangeTimeGTE}
+                      renderInput={(params) => <TextField {...params} />}
+                    />
+                  </Box>
+                <Box sx={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+                  <Typography variant="body2" sx={{width: "150px"}}>Ngày kết thúc</Typography>
+                  <DateTimePicker
+                      value={lte}
+                      onChange={handleChangeTimeLTE}
+                      renderInput={(params) => <TextField {...params} />}
+                    />
+                </Box> </LocalizationProvider></Box> : ""}
             <Box sx={{display: "flex", justifyContent: "end"}}>
               <Button variant="contained" sx={{fontWeight: "bold", marginTop: "10px"}} onClick={() => handleAdvancedSearch()}>Tìm kiếm</Button>
             </Box>
