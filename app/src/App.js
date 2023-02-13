@@ -145,7 +145,11 @@ function App() {
       }
       setValue(newValue)
     }
-    else {
+    else if (field === "boosting"){
+      let newValue = initialValue
+      newValue[field] = e.target.value
+      setValue(newValue)
+    } else {
       let newValue = initialValue
       newValue[field] = e.target.value.toLowerCase()
       setValue(newValue)
@@ -178,7 +182,6 @@ function App() {
             // 'id': data['hits']['hits'][i]['_source']['id'],
           })
         }
-        console.log(curRes2)
         setRes(curRes2)
         setPage(0)
       })
@@ -310,7 +313,7 @@ function App() {
               {data[0] === true ? <Box>
                 <Box sx={{display: "flex", alignItems: "center"}}>
                   <Typography variant="body2" sx={{width: "150px"}}>Trọng số</Typography>
-                  <TextField  sx={{display: "block", marginBottom: "10px"}} value={data[3]['boosting']} variant="outlined" type="number"></TextField>
+                  <TextField  sx={{display: "block", marginBottom: "10px"}} onChange={(e) => handleChangeSearch("boosting", data[4], data[3], e)} variant="outlined" type="number"></TextField>
                   <Typography variant="subtitle2" sx={{marginLeft: "15px", width: "300px", fontSize: "11px"}} >Đánh trọng số cho cụm từ được tìm kiếm ở phía dưới</Typography>
                 </Box>
                 <Box sx={{display: "flex", alignItems: "center"}}>

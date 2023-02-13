@@ -8,7 +8,7 @@ const News = ({data}) => {
   useEffect(() => {
     if(data.highlight != null) {
       if(data.highlight['title'] != null) {
-        setNewsTitle(data.highlight['title'][0].replaceAll("em", "h2"))
+        setNewsTitle(data.highlight['title'][0].replaceAll("em>", "h2>"))
       }
       else {
         setNewsTitle(data.title)
@@ -16,12 +16,12 @@ const News = ({data}) => {
       let curDes = []
       if(data.highlight['content'] != null) {
         for(let i = 0; i < data.highlight['content'].length; ++i) {
-          curDes.push(data.highlight['content'][i].replaceAll("em", "h3"))
+          curDes.push(data.highlight['content'][i].replaceAll("em>", "h3>"))
         }
       } 
       if(data.highlight['description'] != null) {
         for(let i = 0; i < data.highlight['description'].length; ++i) {
-          curDes.push(data.highlight['description'][i].replaceAll("em", "h3"))
+          curDes.push(data.highlight['description'][i].replaceAll("em>", "h3>"))
         }
       }
       if(curDes.length != 0) {

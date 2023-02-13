@@ -66,9 +66,7 @@ def getMultiMatch():
           'content': doc['_source']['content'],
           'image_url': doc['_source']['image_url'],
           'highlight': doc['highlight']})
-  print(cur_result)
   global_result = cur_result
-  print(len(result['hits']['hits']))
   return result
 
 @app.route('/random', methods = ['GET'])

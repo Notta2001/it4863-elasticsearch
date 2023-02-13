@@ -1,0 +1,5 @@
+elasticsearch
+elasticsearch_dsl
+pymongo
+flask
+flask_cors

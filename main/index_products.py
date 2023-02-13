@@ -8,8 +8,8 @@ def main():
     es = Elasticsearch()
     es.indices.delete(index=INDEX_NAME, ignore=404)
     es.indices.delete(index=INDEX_SYN_NAME, ignore=404)
-    response = es.indices.create(
-        index=INDEX_NAME,
+    es.indices.create(
+        index= "news_index",
         body={
             "settings": {
                 "index": {
@@ -86,10 +86,11 @@ def main():
                                 "tư, trung ương",
                                 "tw, trung ương",
                                 "ubnd, ủy_ban_nhân_dân",
-                                "vn, việt_nam"
+                                "vn, việt_nam",
                                 "lqh, liên_hợp_quốc",
                                 "hn, hà_nội"
                             ]
+
                         }
                     }
                 }
