@@ -3,7 +3,6 @@ import {Box, Card, CardContent, Typography, CardMedia, List} from "@mui/material
 import { useState, useEffect } from 'react'
 
 const News = ({data}) => {
-  console.log(data.id)
   const [newsTitle, setNewsTitle] = useState(data.title)
   const [newsDescription, setNewsDescription] = useState([data.description])
   useEffect(() => {
@@ -35,7 +34,7 @@ const News = ({data}) => {
 
 
   return (
-    <Card sx={{ display: 'flex', width: "1000px", height: "200px", justifyContent: "space-between", margin: "0 auto", marginTop: "30px", marginBottom: "30px" }} elevation={3}>
+    <Card sx={{ display: 'flex', width: "1000px", justifyContent: "space-between", margin: "0 auto", marginTop: "30px", marginBottom: "30px" }} elevation={3}>
       <CardMedia
         component="img"
         sx={{minWidth: "300px", maxWidth: "300px" }}

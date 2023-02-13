@@ -1,12 +1,12 @@
 import React from 'react'
-import { Paper, Container, Typography, CardMedia, Box, Link} from '@mui/material'
+import { Paper, Container, Typography, CardMedia, Box, Link, Pagination} from '@mui/material'
 import { useParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import News from './News'
 
 const Detail = () => {
   let {id} = useParams();
-  
+  const [page, setPage] = useState(0);
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
   const [content, setContent] = useState("")
@@ -106,9 +106,24 @@ const Detail = () => {
         </Paper>
       {newsData.length > 1 ? <Typography variant="h5" sx={{fontWeight: "bold", textAlign: "center", marginTop: "30px", marginBottom: "0"}}>Các bài báo cùng danh sách tìm kiếm</Typography> : ""}
       </Container>
-        {newsData.slice(1, 5).map((news, index) => (
-          <Link href={"/" + news.id} sx={{textDecoration: "None"}}><News data={news}></News></Link>
-        ))}
+      <Box>
+          {newsData.length > 1 ? <Box> {newsData.slice(1, newsData.length).slice(page * 5, page * 5 + 5).map((news, index) => (
+              <Box sx={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+                <Box sx={{width: "100px", height: "100px", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "#3399FF", marginRight: "30px", borderRadius: "100%", color: "white"}}>
+                  <Typography variant="h4">{page * 5 + index + 1}</Typography>
+                </Box>
+                <Link href={"/" + news.id} sx={{textDecoration: "none"}}><News key={index} data={news}/></Link>
+              </Box>
+            ))}
+            <Paper sx={{display: "flex", justifyContent: "center", backgroundColor: "#3399FF", minWidth: "200px", maxWidth: "400px", margin: "0 auto", marginBottom: "30px"}}>
+            <Pagination sx={{display: "block", margin: "0 auto"}}
+                count={Math.ceil(newsData.length / 5)}
+                page={page + 1}
+                onChange={(event, newPage) => setPage(newPage - 1)}
+              />
+            </Paper>
+        </Box> : ""}
+    </Box>
     </Box>
     
   )

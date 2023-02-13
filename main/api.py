@@ -114,13 +114,9 @@ def getSingle(_id):
   for doc in global_result:
     if(doc['id'] == _id):
       result.append(doc)
-      count = 0
       for doc in global_result:
         if(doc['id'] != _id):
-          count += 1
           result.append(doc)
-          if (count == 4): 
-            break
       break
   if len(result) != 0:
     return json.dumps(result)

@@ -74,16 +74,16 @@ def build_query(normal=None, title_query=None, content_query=None, des_query=Non
 
     s = s.highlight_options(pre_tags="<em>", post_tags="</em>")
     if title_query: 
-        s = s.highlight("title", fragment_size=150, number_of_fragments=3)
+        s = s.highlight("title", fragment_size=300, number_of_fragments=1)
     if content_query:
-        s = s.highlight("content", fragment_size=150, number_of_fragments=3)
+        s = s.highlight("content", fragment_size=300, number_of_fragments=1)
     if des_query:
-        s = s.highlight("description", fragment_size=150, number_of_fragments=3)
+        s = s.highlight("description", fragment_size=300, number_of_fragments=1)
     
     if normal: 
-        s = s.highlight("title", fragment_size=150, number_of_fragments=3)
-        s = s.highlight("content", fragment_size=150, number_of_fragments=3)
-        s = s.highlight("description", fragment_size=150, number_of_fragments=3)
+        s = s.highlight("title", fragment_size=300, number_of_fragments=1)
+        s = s.highlight("content", fragment_size=300, number_of_fragments=1)
+        s = s.highlight("description", fragment_size=300, number_of_fragments=1)
         
     # if scoring_function == "tf-idf":
     #     s = s.query("function_score", should=bool_query, must=must_query, must_not=must_not_query, minimum_should_match=0, query=s.to_dict(), functions=[{"script_score": {"script": {"source": "1.0 + ln(doc['title'].value + 1.0)"}}}])

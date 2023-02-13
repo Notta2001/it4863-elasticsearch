@@ -180,6 +180,7 @@ function App() {
         }
         console.log(curRes2)
         setRes(curRes2)
+        setPage(0)
       })
     } catch {
       setNumRes(0)
@@ -253,6 +254,7 @@ function App() {
         setSynonyms(false)
         setSearch("")
         setValue("")
+        setPage(0)
       })
     
   }
@@ -363,9 +365,14 @@ function App() {
       )) : ""}
       {numRes !== null ?<Box>
           {res.slice(page * 5, page * 5 + 5).map((news, index) => (
-            <Link href={"/" + news.id} sx={{textDecoration: "none"}}><News key={index} data={news}/></Link>
+            <Box sx={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+              <Box sx={{width: "100px", height: "100px", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "#3399FF", marginRight: "30px", borderRadius: "100%", color: "white"}}>
+                <Typography variant="h4">{page * 5 + index + 1}</Typography>
+              </Box>
+              <Link href={"/" + news.id} sx={{textDecoration: "none"}}><News key={index} data={news}/></Link>
+            </Box>
           ))}
-          <Paper sx={{display: "flex", justifyContent: "center", backgroundColor: "#3399FF", width: "200px", margin: "0 auto", marginBottom: "30px"}}>
+          <Paper sx={{display: "flex", justifyContent: "center", backgroundColor: "#3399FF", minWidth: "200px", maxWidth: "400px", margin: "0 auto", marginBottom: "30px"}}>
           <Pagination sx={{display: "block", margin: "0 auto"}}
               count={Math.ceil(numRes / 5)}
               page={page + 1}
