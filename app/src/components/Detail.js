@@ -146,7 +146,7 @@ const Detail = () => {
   }
   return (
     <Box>
-       {info ? <Button variant="contained" sx={{marginLeft: "30px", fontWeight: "bold", fontSize: "18px", width: "200px"}} onClick={handleChangeInfo}>Ẩn thống kê</Button> : <Button variant="contained" sx={{marginLeft: "30px", fontWeight: "bold", fontSize: "18px", width: "200px"}} onClick={handleChangeInfo}>Hiện thống kê</Button>}
+      <Box sx={{display: "flex", marginRight: "50px", justifyContent: "end"}}>{info ? <Button variant="contained" sx={{marginLeft: "30px", fontWeight: "bold", fontSize: "18px", width: "200px"}} onClick={handleChangeInfo}>Ẩn thống kê</Button> : <Button variant="contained" sx={{marginLeft: "30px", fontWeight: "bold", fontSize: "18px", width: "200px"}} onClick={handleChangeInfo}>Hiện thống kê</Button>}</Box>
       <Container sx={{ marginTop: "100px", width: "80%", display: "flex", alignItems: "start", justifyContent: "center "}}>
         <Paper elevation={3} sx={{padding: "20px 50px", width: "900px"}}>
           <Typography sx={{fontSize: "25px", margin: "20px 0", fontWeight: "bold", textAlign: "justify"}}>
