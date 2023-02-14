@@ -23,6 +23,7 @@ function App() {
   const [range, setRange] = useState(false)
   const [lte, setLte] = useState(dayjs('2024-08-18T21:11:54'))
   const [gte, setGte] = useState(dayjs('1970-08-18T21:11:54'))
+  const [info, setInfo] = useState(false)
   const [titleSearch, setTitleSearch] = useState({
     "match": null,
     "any": [],
@@ -62,6 +63,10 @@ function App() {
   const handleClickOpen = () => {
     setOpen(true);
   };
+
+  const handleChangeInfo = () => {
+    setInfo(!info)
+  }
 
   const handleClose = (value) => {
     setOpen(false);
@@ -129,7 +134,6 @@ function App() {
       .then(res => res.json())
       .then(data => {
         let curData = []
-        console.log(data)
         for(let i = 0; i < data.length; ++i) {
           curData.push({
             "id": data[i]["id"],
@@ -139,7 +143,6 @@ function App() {
             "timestamp": data[i]['timestamp']
           })
         }
-        console.log(curData)
         setRandomNews(curData)
       })
   }, [])
@@ -181,7 +184,6 @@ function App() {
     })
       .then(res => res.json())
       .then(data => {
-        console.log(data['hits']['hits'][0])
         let curRes2 = []
         setNumRes(data['hits']['hits'].length)
         for(let i = 0; i < data['hits']['hits'].length; ++i) {
@@ -192,7 +194,8 @@ function App() {
             'content': data['hits']['hits'][i]['_source']['content'],
             'image_url': data['hits']['hits'][i]['_source']['image_url'],
             'highlight': data['hits']['hits'][i]['highlight'],
-            'timestamp': data['hits']['hits'][i]['_source']['timestamp']
+            'timestamp': data['hits']['hits'][i]['_source']['timestamp'],
+            'score': data['hits']['hits'][i]['_score']
           })
         }
         setRes(curRes2)
@@ -227,7 +230,8 @@ function App() {
             'content': data['hits']['hits'][i]['_source']['content'],
             'image_url': data['hits']['hits'][i]['_source']['image_url'],
             'highlight': data['hits']['hits'][i]['highlight'],
-            'timestamp': data['hits']['hits'][i]['_source']['timestamp']
+            'timestamp': data['hits']['hits'][i]['_source']['timestamp'],
+            'score': data['hits']['hits'][i]['_score']
           })
         }
         console.log(curRes)
@@ -408,6 +412,7 @@ function App() {
         </Paper>
         
       </Dialog>
+      {info ? <Button variant="contained" sx={{marginLeft: "30px", fontWeight: "bold", fontSize: "18px", width: "200px"}} onClick={handleChangeInfo}>Ẩn thống kê</Button> : <Button variant="contained" sx={{marginLeft: "30px", fontWeight: "bold", fontSize: "18px", width: "200px"}} onClick={handleChangeInfo}>Hiện thống kê</Button>}
       </Box>
       {numRes !== null ? <Typography variant="body2" sx={{marginLeft: "250px", marginTop: "20px", fontSize:"16px", color: "#3399FF"}}>Có {numRes} kết quả ứng với tìm kiếm {search !== "" ? <Typography sx={{fontWeight: "bold", display: "inline-block"}}>"{search}"</Typography>: " "}</Typography> : ""}
       {numRes == null ? randomNews.map((news, index) => (
@@ -419,7 +424,7 @@ function App() {
               <Box sx={{width: "100px", height: "100px", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "#3399FF", marginRight: "30px", borderRadius: "100%", color: "white"}}>
                 <Typography variant="h4">{page * 5 + index + 1}</Typography>
               </Box>
-              <Link href={"/" + news.id} sx={{textDecoration: "none"}}><News key={index} data={news}/></Link>
+              <Link href={"/" + news.id} sx={{textDecoration: "none"}}><News key={index} data={news} info={info}/></Link>
             </Box>
           ))}
           <Paper sx={{display: "flex", justifyContent: "center", backgroundColor: "#3399FF", minWidth: "200px", maxWidth: "400px", margin: "0 auto", marginBottom: "30px"}}>

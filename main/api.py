@@ -66,6 +66,7 @@ def getMultiMatch():
           'content': doc['_source']['content'],
           'image_url': doc['_source']['image_url'],
           'highlight': doc['highlight'],
+          'score': doc['_score'],
           'timestamp': doc['_source']['timestamp']}),
   global_result = cur_result
   return result
@@ -104,6 +105,7 @@ def getNormal():
           'content': doc['_source']['content'],
           'image_url': doc['_source']['image_url'],
           'highlight': doc['highlight'],
+          'score': doc['_score'],
           'timestamp': doc['_source']['timestamp']})
   global_result = cur_result
   return result

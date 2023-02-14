@@ -9,7 +9,7 @@ HEADERS = {'content-type': 'application/json'}
 #                 use_bool=False, use_wildcard=False, use_regexp=False, match_phrase=False, function_score=False,
 #                 more_like_this=False, analyzer="my_analyzer"):
 def build_query(normal=None, title_query=None, content_query=None, des_query=None, gte="0", lte="1676313026", sort=False, minimum_should_match=0, analyzer="my_analyzer"):
-    s = Search()
+    s = Search().sort({"_score": {"order": "desc"}})
     if sort:
         s = Search().sort({'timestamp': "desc"})
     should_query = []
